@@ -6,6 +6,8 @@
 #include <gbdk/console.h>
 #include <stdio.h>
 
+#define MAX_TEXT_LENGTH 20
+
 // Background palette data (GBC)
 const palette_color_t bg_palette[] = {
     // Palette 0 - Default UI
@@ -40,7 +42,7 @@ void init_graphics(void) {
 
 void print_text(uint8_t x, uint8_t y, const char* text) {
     uint8_t i = 0;
-    while (text[i] != '\0' && i < 20) {
+    while (text[i] != '\0' && i < MAX_TEXT_LENGTH) {
         set_bkg_tiles(x + i, y, 1, 1, (unsigned char*)&text[i]);
         i++;
     }

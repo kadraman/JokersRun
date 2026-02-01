@@ -15,9 +15,9 @@ void init_shop(ShopItem* items, uint8_t blind_level) {
         uint8_t item_type = shop_random() % 2;
         
         if (item_type == 0) {
-            // Joker
+            // Joker - all 5 types (JOKER_MULTIPLIER=1 to JOKER_FACE_BONUS=5)
             items[i].type = SHOP_ITEM_JOKER;
-            items[i].joker = (shop_random() % 4) + 1; // JOKER_MULTIPLIER to JOKER_FACE_BONUS
+            items[i].joker = (shop_random() % 5) + 1;
             items[i].cost = 50 + (blind_level * 10);
         } else {
             // Extra hand/discard (simplified as reroll for now)
