@@ -7,6 +7,7 @@
 #include <gbdk/font.h>
 #include <stdio.h>
 
+// Maximum characters per line for the GBC text console (screen is 20 tiles wide)
 #define MAX_TEXT_LENGTH 20
 
 // Background palette data (GBC)

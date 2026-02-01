@@ -1,7 +1,9 @@
 #include "shop.h"
 #include <rand.h>
 
-static uint8_t shop_rng = 42;
+// Fixed seed for deterministic shop RNG
+#define SHOP_RNG_INITIAL_SEED 42
+static uint8_t shop_rng = SHOP_RNG_INITIAL_SEED;
 
 static uint8_t shop_random(void) {
     shop_rng = (shop_rng * 73 + 17) & 0xFF;

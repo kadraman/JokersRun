@@ -95,7 +95,7 @@ With jokers:
 **A**: Not yet - discarding isn't implemented. You must play all 5 cards.
 
 ### Q: What's the highest score possible?
-**A**: With 5 Mult+4 jokers: Royal Flush = 100 × (8+20) = **2,800 points**!
+**A**: With 5 Mult+4 jokers: Royal Flush = 100 × (8 + (5 × 4)) = **2,800 points**!
 
 ### Q: Does the game save?
 **A**: Not yet - the game resets when you power off.

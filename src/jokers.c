@@ -43,7 +43,8 @@ void apply_jokers(HandScore* score, Card* hand, Joker* jokers) {
                 break;
                 
             case JOKER_LUCKY:
-                // Random bonus (simplified - just add 1-3 to multiplier)
+                // Random bonus - deterministic placeholder using joker slot index
+                // TODO: Replace with proper RNG for true randomness
                 score->multiplier += 1 + (i % 3);
                 break;
                 

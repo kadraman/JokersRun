@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <rand.h>
 
-// Simple RNG state
-static uint16_t rng_seed = 12345;
+// Fixed initial seed for deterministic shuffle behavior
+#define RNG_INITIAL_SEED 12345u
+static uint16_t rng_seed = RNG_INITIAL_SEED;
 
 // Simple random number generator
 static uint8_t random_byte(void) {
