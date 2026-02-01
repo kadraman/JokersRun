@@ -50,7 +50,7 @@ void handle_play_hand(Game* game) {
     
     while (!done && game->hands_left > 0) {
         draw_game_screen(game);
-        draw_hand(game->hand);
+        draw_hand(game->hand, cursor);  // Pass cursor position
         
         waitpad(J_A | J_B | J_LEFT | J_RIGHT | J_START);
         

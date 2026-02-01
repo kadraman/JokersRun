@@ -58,7 +58,7 @@ void deal_hand(Card* deck, Card* hand, uint8_t* deck_pos) {
 
 // Tile positions for card graphics (simple ASCII-style)
 // Using background tiles, not sprites
-void draw_card(uint8_t x, uint8_t y, Card* card) {
+void draw_card(uint8_t x, uint8_t y, Card* card, uint8_t is_selected, uint8_t has_cursor) {
     char rank_char, suit_char;
     
     // Convert rank to character
@@ -85,36 +85,31 @@ void draw_card(uint8_t x, uint8_t y, Card* card) {
         default:            suit_char = '?'; break;
     }
     
-    // Draw card border (simple box) using console
+    // Draw cursor above card
+    gotoxy(x, y - 1);
+    if (has_cursor) {
+        printf("vv");  // Cursor indicator
+    } else {
+        printf("  ");
+    }
+    
+    // Draw card (2 chars wide + 1 for selection marker)
     gotoxy(x, y);
-    printf("+--+");
-    
-    gotoxy(x, y+1);
-    printf("|%c|", rank_char);
-    
-    gotoxy(x, y+2);
-    printf("|%c|", suit_char);
-    
-    gotoxy(x, y+3);
-    printf("+--+");
+    if (is_selected) {
+        printf(">%c%c", rank_char, suit_char);  // > shows selected
+    } else {
+        printf(" %c%c", rank_char, suit_char);
+    }
 }
 
-void draw_hand(Card* hand) {
+void draw_hand(Card* hand, uint8_t cursor_pos) {
     uint8_t i;
     uint8_t x_pos;
     
-    // Draw 5 cards in a row
+    // Draw 5 cards in a row (3 chars per card + 1 space = 4 chars each)
+    // Total: 5 cards × 4 = 20 chars (fits perfectly in 20-char screen)
     for (i = 0; i < HAND_SIZE; i++) {
-        x_pos = 2 + (i * 5); // 5 tiles per card with spacing (4 for card + 1 space)
-        draw_card(x_pos, 8, &hand[i]);
-        
-        // Draw selection indicator if selected
-        if (hand[i].selected) {
-            gotoxy(x_pos+1, 7);
-            printf("^");
-        } else {
-            gotoxy(x_pos+1, 7);
-            printf(" ");
-        }
+        x_pos = 1 + (i * 4); // 4 chars per card (3 for card + 1 space)
+        draw_card(x_pos, 10, &hand[i], hand[i].selected, (i == cursor_pos));
     }
 }

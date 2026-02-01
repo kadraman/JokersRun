@@ -74,35 +74,39 @@ void draw_blind_screen(uint8_t level, uint16_t target) {
 void draw_game_screen(Game* game) {
     cls();
     
-    // Draw score
-    print_text(1, 1, "SCORE:");
-    print_number(8, 1, game->current_score);
+    // Draw score and target on same line to save space
+    print_text(1, 1, "SC:");
+    print_number(4, 1, game->current_score);
     
-    print_text(1, 2, "TARGET:");
-    print_number(9, 2, game->target_score);
+    print_text(10, 1, "TG:");
+    print_number(13, 1, game->target_score);
     
-    // Draw hands and discards left
-    print_text(1, 4, "HANDS:");
-    print_number(8, 4, game->hands_left);
+    // Draw hands and money on same line
+    print_text(1, 2, "HANDS:");
+    print_number(7, 2, game->hands_left);
     
-    print_text(1, 5, "MONEY:$");
-    print_number(9, 5, game->money);
+    print_text(10, 2, "$");
+    print_number(11, 2, game->money);
     
-    // Draw jokers
+    // Cards will be drawn at row 10 by draw_hand()
+    
+    // Draw jokers at bottom if any
     if (game->jokers[0].active || game->jokers[1].active) {
-        print_text(1, 14, "JOKERS:");
+        print_text(1, 14, "JOKER:");
         uint8_t x = 1;
         uint8_t i;
-        for (i = 0; i < MAX_JOKERS && x < 15; i++) {
+        for (i = 0; i < MAX_JOKERS && x < 18; i++) {
             if (game->jokers[i].active) {
                 const char* name = get_joker_name(game->jokers[i].type);
                 print_text(x, 15, name);
-                x += 6;
+                x += 7;
+                if (x + 7 > 20) break; // Stop if next joker won't fit
             }
         }
     }
     
-    // Hand will be drawn by draw_hand()
+    // Instructions
+    print_text(1, 17, "A:SEL B:PLAY");
 }
 
 void draw_shop_screen(Game* game, ShopItem* items, uint8_t cursor) {
