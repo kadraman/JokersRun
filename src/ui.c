@@ -4,6 +4,7 @@
 #include <gb/gb.h>
 #include <gb/cgb.h>
 #include <gbdk/console.h>
+#include <gbdk/font.h>
 #include <stdio.h>
 
 #define MAX_TEXT_LENGTH 20
@@ -31,6 +32,10 @@ const palette_color_t sprite_palette[] = {
 };
 
 void init_graphics(void) {
+    // Initialize font and console
+    font_init();
+    font_set(font_load(font_min));
+    
     // Set up GBC palettes
     set_bkg_palette(0, 4, bg_palette);
     set_sprite_palette(0, 4, sprite_palette);
@@ -41,39 +46,13 @@ void init_graphics(void) {
 }
 
 void print_text(uint8_t x, uint8_t y, const char* text) {
-    uint8_t i = 0;
-    while (text[i] != '\0' && i < MAX_TEXT_LENGTH) {
-        set_bkg_tiles(x + i, y, 1, 1, (unsigned char*)&text[i]);
-        i++;
-    }
+    gotoxy(x, y);
+    printf("%s", text);
 }
 
 void print_number(uint8_t x, uint8_t y, uint16_t num) {
-    char buffer[6];
-    uint8_t i = 0, len;
-    
-    // Convert number to string
-    if (num == 0) {
-        buffer[0] = '0';
-        buffer[1] = '\0';
-        len = 1;
-    } else {
-        uint16_t temp = num;
-        uint8_t digits[5];
-        len = 0;
-        
-        while (temp > 0) {
-            digits[len++] = temp % 10;
-            temp /= 10;
-        }
-        
-        for (i = 0; i < len; i++) {
-            buffer[i] = '0' + digits[len - 1 - i];
-        }
-        buffer[len] = '\0';
-    }
-    
-    print_text(x, y, buffer);
+    gotoxy(x, y);
+    printf("%u", num);
 }
 
 void draw_title_screen(void) {

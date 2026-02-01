@@ -1,5 +1,7 @@
 #include "cards.h"
 #include <gb/gb.h>
+#include <gbdk/console.h>
+#include <stdio.h>
 #include <rand.h>
 
 // Simple RNG state
@@ -57,7 +59,7 @@ void deal_hand(Card* deck, Card* hand, uint8_t* deck_pos) {
 // Tile positions for card graphics (simple ASCII-style)
 // Using background tiles, not sprites
 void draw_card(uint8_t x, uint8_t y, Card* card) {
-    uint8_t rank_char, suit_char;
+    char rank_char, suit_char;
     
     // Convert rank to character
     if (card->rank <= 8) {
@@ -83,23 +85,18 @@ void draw_card(uint8_t x, uint8_t y, Card* card) {
         default:            suit_char = '?'; break;
     }
     
-    // Draw card border (simple box)
-    set_bkg_tiles(x, y, 1, 1, (unsigned char*)"+");
-    set_bkg_tiles(x+1, y, 1, 1, (unsigned char*)"-");
-    set_bkg_tiles(x+2, y, 1, 1, (unsigned char*)"+");
+    // Draw card border (simple box) using console
+    gotoxy(x, y);
+    printf("+--+");
     
-    // Draw rank and suit
-    set_bkg_tiles(x, y+1, 1, 1, (unsigned char*)"|");
-    set_bkg_tiles(x+1, y+1, 1, 1, &rank_char);
-    set_bkg_tiles(x+2, y+1, 1, 1, (unsigned char*)"|");
+    gotoxy(x, y+1);
+    printf("|%c|", rank_char);
     
-    set_bkg_tiles(x, y+2, 1, 1, (unsigned char*)"|");
-    set_bkg_tiles(x+1, y+2, 1, 1, &suit_char);
-    set_bkg_tiles(x+2, y+2, 1, 1, (unsigned char*)"|");
+    gotoxy(x, y+2);
+    printf("|%c|", suit_char);
     
-    set_bkg_tiles(x, y+3, 1, 1, (unsigned char*)"+");
-    set_bkg_tiles(x+1, y+3, 1, 1, (unsigned char*)"-");
-    set_bkg_tiles(x+2, y+3, 1, 1, (unsigned char*)"+");
+    gotoxy(x, y+3);
+    printf("+--+");
 }
 
 void draw_hand(Card* hand) {
@@ -108,14 +105,16 @@ void draw_hand(Card* hand) {
     
     // Draw 5 cards in a row
     for (i = 0; i < HAND_SIZE; i++) {
-        x_pos = 2 + (i * 4); // 4 tiles per card with spacing
+        x_pos = 2 + (i * 5); // 5 tiles per card with spacing (4 for card + 1 space)
         draw_card(x_pos, 8, &hand[i]);
         
         // Draw selection indicator if selected
         if (hand[i].selected) {
-            set_bkg_tiles(x_pos+1, 7, 1, 1, (unsigned char*)"^");
+            gotoxy(x_pos+1, 7);
+            printf("^");
         } else {
-            set_bkg_tiles(x_pos+1, 7, 1, 1, (unsigned char*)" ");
+            gotoxy(x_pos+1, 7);
+            printf(" ");
         }
     }
 }
