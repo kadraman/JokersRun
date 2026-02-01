@@ -46,13 +46,38 @@ void init_graphics(void) {
 }
 
 void print_text(uint8_t x, uint8_t y, const char* text) {
+    uint8_t i = 0;
     gotoxy(x, y);
-    printf("%s", text);
+    while (text[i] != '\0' && i < MAX_TEXT_LENGTH) {
+        printf("%c", text[i]);
+        i++;
+    }
 }
 
 void print_number(uint8_t x, uint8_t y, uint16_t num) {
+    char buffer[6];
+    uint8_t i = 0;
+    
+    // Convert number to string manually
+    if (num == 0) {
+        gotoxy(x, y);
+        printf("0");
+        return;
+    }
+    
+    // Build string in reverse
+    uint16_t temp = num;
+    while (temp > 0 && i < 5) {
+        buffer[i++] = '0' + (temp % 10);
+        temp /= 10;
+    }
+    
+    // Print in correct order
     gotoxy(x, y);
-    printf("%u", num);
+    while (i > 0) {
+        i--;
+        printf("%c", buffer[i]);
+    }
 }
 
 void draw_title_screen(void) {

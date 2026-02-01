@@ -85,31 +85,44 @@ void draw_card(uint8_t x, uint8_t y, Card* card, uint8_t is_selected, uint8_t ha
         default:            suit_char = '?'; break;
     }
     
-    // Draw cursor above card
+    // Draw cursor above card (use lowercase v)
     gotoxy(x, y - 1);
     if (has_cursor) {
-        printf("vv");  // Cursor indicator
+        printf("v");
+        gotoxy(x+1, y - 1);
+        printf("v");
     } else {
-        printf("  ");
+        printf(" ");
+        gotoxy(x+1, y - 1);
+        printf(" ");
     }
     
-    // Draw card (2 chars wide + 1 for selection marker)
+    // Draw card on two lines for better visibility
+    // Line 1: Rank with selection marker
     gotoxy(x, y);
     if (is_selected) {
-        printf(">%c%c", rank_char, suit_char);  // > shows selected
+        printf(">");
     } else {
-        printf(" %c%c", rank_char, suit_char);
+        printf(" ");
     }
+    gotoxy(x+1, y);
+    printf("%c", rank_char);
+    
+    // Line 2: Suit below rank
+    gotoxy(x, y+1);
+    printf(" ");
+    gotoxy(x+1, y+1);
+    printf("%c", suit_char);
 }
 
 void draw_hand(Card* hand, uint8_t cursor_pos) {
     uint8_t i;
     uint8_t x_pos;
     
-    // Draw 5 cards in a row (3 chars per card + 1 space = 4 chars each)
-    // Total: 5 cards × 4 = 20 chars (fits perfectly in 20-char screen)
+    // Draw 5 cards in a row (3 chars per card: selection/space + rank + space)
+    // Spacing: 4 chars per card slot
     for (i = 0; i < HAND_SIZE; i++) {
-        x_pos = 1 + (i * 4); // 4 chars per card (3 for card + 1 space)
+        x_pos = 1 + (i * 4); // 4 chars per card (2 for card + 2 space)
         draw_card(x_pos, 10, &hand[i], hand[i].selected, (i == cursor_pos));
     }
 }
