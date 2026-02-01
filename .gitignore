@@ -63,3 +63,5 @@ gbdk/
 *.sym
 *.noi
 *.lst
+*.asm
+*.ihx
