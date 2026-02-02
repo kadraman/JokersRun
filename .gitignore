@@ -53,3 +53,15 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# GBDK local installation
+gbdk/
+
+# Game Boy build artifacts
+*.gb
+*.gbc
+*.sym
+*.noi
+*.lst
+*.asm
+*.ihx
