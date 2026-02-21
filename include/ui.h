@@ -16,6 +16,7 @@ void draw_score_screen(HandScore* score, uint16_t total);
 
 // Utility text drawing
 void print_text(uint8_t x, uint8_t y, const char* text);
+//void print_text(uint8_t x, uint8_t y, const char* text);
+//void print_number(uint8_t x, uint8_t y, uint16_t num);
 void print_number(uint8_t x, uint8_t y, uint16_t num);
-
 #endif // UI_H

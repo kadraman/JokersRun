@@ -6,10 +6,12 @@
 #include <gbdk/console.h>
 #include <gbdk/font.h>
 #include <stdio.h>
+#include "tiles.h"
 
 // Maximum characters per line for the GBC text console (screen is 20 tiles wide)
-// Maximum characters per line for the GBC text console (screen is 20 tiles wide)
 #define MAX_TEXT_LENGTH 20
+
+extern const unsigned char tiles[];
 
 // Background palette data (GBC)
 const palette_color_t bg_palette[] = {
@@ -41,44 +43,56 @@ void init_graphics(void) {
     // Set up GBC palettes
     set_bkg_palette(0, 4, bg_palette);
     set_sprite_palette(0, 4, sprite_palette);
+
+    // Load tile data for text and UI elements
+    set_bkg_data(0, 67, tiles);
+    
     
     // Enable background and window
     SHOW_BKG;
     DISPLAY_ON;
 }
 
-void print_text(uint8_t x, uint8_t y, const char* text) {
-    uint8_t i = 0;
-    gotoxy(x, y);
-    while (text[i] != '\0' && i < MAX_TEXT_LENGTH) {
-        printf("%c", text[i]);
-        i++;
+void print_text(uint8_t x, uint8_t y, const char* text)
+{
+    while(*text)
+    {
+        char c = *text;
+        if(c >= 32 && c <= 127)
+        {
+            UINT8 tile = c - 32;  // map ASCII 32..127 to tiles
+            set_bkg_tiles(x++, y, 1, 1, &tile);
+        }
+        text++;
     }
 }
 
-void print_number(uint8_t x, uint8_t y, uint16_t num) {
-    char buffer[6];
+/* Assumes TILE_ASCII_BASE maps '0'..'9' starting at ASCII 48 */
+void print_number(uint8_t x, uint8_t y, uint16_t num)
+{
+    char buf[6]; // max 5 digits for UINT16 + null
     uint8_t i = 0;
-    
-    // Convert number to string manually
-    if (num == 0) {
-        gotoxy(x, y);
-        printf("0");
+
+    // Handle zero explicitly
+    if(num == 0)
+    {
+        uint8_t tile = TILE_ASCII_BASE + ('0' - 32);
+        set_bkg_tiles(x, y, 1, 1, &tile);
         return;
     }
-    
-    // Build string in reverse
-    uint16_t temp = num;
-    while (temp > 0 && i < 5) {
-        buffer[i++] = '0' + (temp % 10);
-        temp /= 10;
+
+    // Convert number to decimal digits in reverse
+    while(num > 0 && i < 5)
+    {
+        buf[i++] = (num % 10) + '0';
+        num /= 10;
     }
-    
-    // Print in correct order
-    gotoxy(x, y);
-    while (i > 0) {
-        i--;
-        printf("%c", buffer[i]);
+
+    // Print digits in correct order
+    for(uint8_t j = 0; j < i; j++)
+    {
+        uint8_t tile = TILE_ASCII_BASE + (buf[i - j - 1] - 32);
+        set_bkg_tiles(x + j, y, 1, 1, &tile);
     }
 }
 
@@ -86,16 +100,16 @@ void draw_title_screen(void) {
     cls();
     print_text(3, 5, "CHROMA CARDS");
     print_text(3, 7, "JOKER'S RUN");
-    print_text(3, 12, "Press START");
+    print_text(3, 12, "PRESS START");
 }
 
 void draw_blind_screen(uint8_t level, uint16_t target) {
     cls();
-    print_text(5, 5, "BLIND ");
+    print_text(5, 5, "BLIND:");
     print_number(11, 5, level);
     print_text(5, 8, "TARGET:");
     print_number(5, 9, target);
-    print_text(4, 14, "Press START");
+    print_text(4, 14, "PRESS START");
 }
 
 void draw_game_screen(Game* game) {
@@ -156,7 +170,7 @@ void draw_shop_screen(Game* game, ShopItem* items, uint8_t cursor) {
             const char* name = get_joker_name(items[i].joker);
             print_text(3, y, name);
         } else {
-            print_text(3, y, "+1 Hand");
+            print_text(3, y, "+1 HAND");
         }
         
         print_text(11, y, "$");
@@ -176,11 +190,11 @@ void draw_score_screen(HandScore* score, uint16_t total) {
     print_text(3, 8, "CHIPS:");
     print_number(10, 8, score->chips);
     
-    print_text(3, 9, "MULT: x");
+    print_text(3, 9, "MULT: X");
     print_number(11, 9, score->multiplier);
     
     print_text(3, 11, "SCORE:");
     print_number(10, 11, total);
     
-    print_text(3, 14, "Press A");
+    print_text(3, 14, "PRESS A");
 }

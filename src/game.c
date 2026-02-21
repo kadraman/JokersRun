@@ -53,8 +53,8 @@ void handle_play_hand(Game* game) {
         draw_hand(game->hand, cursor);  // Pass cursor position
         wait_vbl_done();  // Ensure screen update completes
         
-        waitpad(J_A | J_B | J_LEFT | J_RIGHT | J_START);
-        
+        waitpad(J_A | J_B | J_LEFT | J_RIGHT | J_START | J_UP | J_DOWN);
+
         if (joypad() & J_LEFT) {
             if (cursor > 0) cursor--;
             waitpadup();
@@ -63,26 +63,46 @@ void handle_play_hand(Game* game) {
             if (cursor < HAND_SIZE - 1) cursor++;
             waitpadup();
             delay(100);
-        } else if (joypad() & J_A) {
-            // Toggle selection
+        } else if (joypad() & J_UP) {
+            // Toggle selection on current card
             game->hand[cursor].selected = !game->hand[cursor].selected;
             waitpadup();
             delay(100);
+        } else if (joypad() & J_DOWN) {
+            // Discard selected cards (draw replacements)
+            if (game->discards_left > 0) {
+                uint8_t selected_count = 0;
+                uint8_t i;
+                for (i = 0; i < HAND_SIZE; i++) {
+                    if (game->hand[i].selected) selected_count++;
+                }
+
+                if (selected_count > 0) {
+                    for (i = 0; i < HAND_SIZE; i++) {
+                        if (game->hand[i].selected) {
+                            if (deck_pos >= DECK_SIZE) {
+                                deck_pos = 0;
+                                shuffle_deck(game->deck);
+                            }
+                            game->hand[i] = game->deck[deck_pos];
+                            game->hand[i].selected = 0;
+                            deck_pos++;
+                        }
+                    }
+                    game->discards_left--;
+                }
+            }
+            waitpadup();
+            delay(100);
+        } else if (joypad() & J_A) {
+            // Play hand (evaluate current hand)
+            game->hands_left--;
+            game->state = STATE_SCORING;
+            done = 1;
+            waitpadup();
+            delay(100);
         } else if (joypad() & J_B) {
-            // Play selected cards
-            uint8_t selected_count = 0;
-            uint8_t i;
-            
-            for (i = 0; i < HAND_SIZE; i++) {
-                if (game->hand[i].selected) selected_count++;
-            }
-            
-            if (selected_count == HAND_SIZE) {
-                // Evaluate hand
-                game->hands_left--;
-                game->state = STATE_SCORING;
-                done = 1;
-            }
+            // No-op (reserved)
             waitpadup();
             delay(100);
         } else if (joypad() & J_START) {
@@ -182,7 +202,7 @@ void run_game(void) {
     
     init_graphics();
     
-    // Title screen
+    // Title screen  
     draw_title_screen();
     waitpad(J_START);
     waitpadup();
