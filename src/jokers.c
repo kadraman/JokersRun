@@ -1,4 +1,5 @@
 #include "jokers.h"
+#include <gbdk/emu_debug.h>
 
 static uint8_t all_same_suit(Card* hand) {
     uint8_t i;
@@ -61,11 +62,11 @@ void apply_jokers(HandScore* score, Card* hand, Joker* jokers) {
 
 const char* get_joker_name(JokerType type) {
     switch (type) {
-        case JOKER_MULTIPLIER:  return "Mult +4";
-        case JOKER_CHIP_BONUS:  return "Chips +50";
-        case JOKER_SUIT_BOOST:  return "Flush x2";
-        case JOKER_LUCKY:       return "Lucky";
-        case JOKER_FACE_BONUS:  return "Face Bonus";
-        default:                return "Unknown";
+        case JOKER_MULTIPLIER:  return "MULT +4";
+        case JOKER_CHIP_BONUS:  return "CHIPS +50";
+        case JOKER_SUIT_BOOST:  return "FLUSH x2";
+        case JOKER_LUCKY:       return "LUCKY";
+        case JOKER_FACE_BONUS:  return "FACE BONUS";
+        default:                return "UNKNOWN";
     }
 }

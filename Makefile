@@ -8,28 +8,38 @@ EMULICIOUS ?= Emulicious.exe
 
 # Compiler and tools
 CC = $(GBDK_HOME)/bin/lcc
-CFLAGS = -Iinclude
+CFLAGS = -Iinclude -debug
+LDFLAGS = -debug -Wl-m -Wl-j
+
+# Directories
+SRC_DIR := src
+OBJ_DIR := obj
+BIN_DIR := bin
 
 # Target
-TARGET = chromacards.gbc
+TARGET := $(BIN_DIR)/chromacards.gbc
 
-# Source files
-SOURCES = src/main.c src/cards.c src/poker.c src/jokers.c src/shop.c src/ui.c src/game.c src/tiles.c
-
-# Object files
-OBJECTS = $(SOURCES:.c=.o)
+# Source and object files
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+OBJECTS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 # Build target
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
-	$(CC) -Wl-yt0x1B -Wl-ya4 -o $(TARGET) $(OBJECTS)
+$(TARGET): $(OBJECTS) | $(BIN_DIR)
+	$(CC) $(LDFLAGS) -o $@ $(OBJECTS)
 
-%.o: %.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
 clean:
-	rm -f $(OBJECTS) $(TARGET) *.map *.sym *.lst
+	rm -rf $(OBJ_DIR) $(BIN_DIR) *.map *.sym *.lst
 
 # Run ROM in Emulicious
 run: $(TARGET)

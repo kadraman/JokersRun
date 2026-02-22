@@ -4,6 +4,8 @@
 #include "gametypes.h"
 #include "shop.h"
 
+#define SCORE_BLIND_BONUS 5
+
 // Game initialization
 void init_game(Game* game);
 

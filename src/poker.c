@@ -150,16 +150,16 @@ uint8_t get_base_multiplier(HandType type) {
 
 const char* get_hand_name(HandType type) {
     switch (type) {
-        case HAND_ROYAL_FLUSH:      return "Royal Flush";
-        case HAND_STRAIGHT_FLUSH:   return "Straight Flush";
-        case HAND_FOUR_KIND:        return "Four of a Kind";
-        case HAND_FULL_HOUSE:       return "Full House";
-        case HAND_FLUSH:            return "Flush";
-        case HAND_STRAIGHT:         return "Straight";
-        case HAND_THREE_KIND:       return "Three of a Kind";
-        case HAND_TWO_PAIR:         return "Two Pair";
-        case HAND_PAIR:             return "Pair";
-        case HAND_HIGH_CARD:        return "High Card";
-        default:                    return "Unknown";
+        case HAND_ROYAL_FLUSH:      return "ROYAL FLUSH";
+        case HAND_STRAIGHT_FLUSH:   return "STRAIGHT FLUSH";
+        case HAND_FOUR_KIND:        return "FOUR OF A KIND";
+        case HAND_FULL_HOUSE:       return "FULL HOUSE";
+        case HAND_FLUSH:            return "FLUSH";
+        case HAND_STRAIGHT:         return "STRAIGHT";
+        case HAND_THREE_KIND:       return "THREE OF A KIND";
+        case HAND_TWO_PAIR:         return "TWO PAIR";
+        case HAND_PAIR:             return "PAIR";
+        case HAND_HIGH_CARD:        return "HIGH CARD";
+        default:                    return "UNKNOWN HAND";
     }
 }

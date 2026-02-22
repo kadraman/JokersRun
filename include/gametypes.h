@@ -81,7 +81,9 @@ typedef struct {
     uint16_t target_score;
     uint16_t current_score;
     uint8_t hands_left;
+    uint8_t extra_hands; // Track extra hands from shop purchases
     uint8_t discards_left;
+    uint8_t extra_discards; // Track extra discards from shop purchases
     uint16_t money;
     Joker jokers[MAX_JOKERS];
     Card deck[DECK_SIZE];

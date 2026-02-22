@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "name": "Windows",
+      "compilerPath": "C:/Tools/CrossZGB/gbdk/bin/lcc",
+      "intelliSenseMode": "gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/include",
+        "C:/Tools/CrossZGB/gbdk/include",
+        "C:/Tools/CrossZGB/gbdk/include/gbdk-2020"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/include",
+          "C:/Tools/CrossZGB/gbdk/include"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ],
+  "version": 4
+}

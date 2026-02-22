@@ -13,5 +13,11 @@ void deal_hand(Card* deck, Card* hand, uint8_t* deck_pos);
 // Card drawing functions
 void draw_card(uint8_t x, uint8_t y, Card* card, uint8_t is_selected, uint8_t has_cursor);
 void draw_hand(Card* hand, uint8_t cursor_pos);
+// Draw hand without selection offsets or cursor markers at specified rank row
+void draw_hand_no_select_at(Card* hand, uint8_t rank_y);
+
+// RNG access (shared)
+uint8_t random_byte(void);
+void seed_rng_from_hw(void);
 
 #endif // CARDS_H
