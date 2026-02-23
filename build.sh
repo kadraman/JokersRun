@@ -1,19 +1,21 @@
 #!/bin/bash
-# Quick build test script for Chroma Cards: Joker's Run
+# Build script for Chroma Cards: Joker's Run (CrossZGB Edition)
 
-echo "Testing build for Chroma Cards: Joker's Run"
-echo "============================================"
+echo "Building Chroma Cards: Joker's Run (CrossZGB)"
+echo "==============================================="
 echo ""
 
-# Check if GBDK is available
-if [ ! -d "gbdk" ]; then
-    echo "ERROR: GBDK not found in ./gbdk/"
-    echo "Please download GBDK-2020 and extract to ./gbdk/"
+# Check if ZGB_PATH is set
+if [ -z "$ZGB_PATH" ]; then
+    echo "ERROR: ZGB_PATH environment variable is not set."
+    echo "Please install CrossZGB and set ZGB_PATH to its 'common' directory."
+    echo "  Example: export ZGB_PATH=/path/to/CrossZGB/common"
+    echo "  See: https://github.com/gbdk-2020/CrossZGB"
     exit 1
 fi
 
-# Set up PATH
-export PATH=$PATH:$(pwd)/gbdk/bin
+echo "Using CrossZGB at: $ZGB_PATH"
+echo ""
 
 echo "Cleaning previous build..."
 make clean
@@ -26,13 +28,15 @@ if [ $? -eq 0 ]; then
     echo ""
     echo "✓ Build successful!"
     echo ""
-    echo "Output: chromacards.gbc"
-    ls -lh chromacards.gbc
-    file chromacards.gbc
+    echo "Output: build/gbc/JokersRun.gbc"
+    if [ -f "build/gbc/JokersRun.gbc" ]; then
+        ls -lh build/gbc/JokersRun.gbc
+    fi
     echo ""
-    echo "You can now run chromacards.gbc in a GBC emulator!"
+    echo "You can now run the .gbc file in a GBC emulator!"
 else
     echo ""
     echo "✗ Build failed!"
     exit 1
 fi
+

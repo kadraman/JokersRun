@@ -67,3 +67,7 @@ gbdk/
 *.lst
 *.asm
 *.ihx
+
+# CrossZGB build output directory
+build/
+
