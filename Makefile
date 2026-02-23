@@ -1,53 +1,33 @@
-# Makefile for Chroma Cards: Joker's Run (GBC)
+# Makefile for Chroma Cards: Joker's Run (GBC) - CrossZGB Edition
+#
+# Requires CrossZGB installed with ZGB_PATH environment variable set.
+# See: https://github.com/gbdk-2020/CrossZGB
+#
+# Usage:
+#   export ZGB_PATH=/path/to/CrossZGB/common
+#   make
 
-# GBDK path - use environment variable or default to ./gbdk
-GBDK_HOME ?= ./gbdk
+# Project name (no spaces or special characters)
+PROJECT_NAME = JokersRun
 
-# Emulicious executable (can be overridden via env or CLI)
-EMULICIOUS ?= Emulicious.exe
+# Target platforms (gbc = Game Boy Color)
+TARGETS = gbc
 
-# Compiler and tools
-CC = $(GBDK_HOME)/bin/lcc
-CFLAGS = -Iinclude -debug
-LDFLAGS = -debug -Wl-m -Wl-j
+# Build all targets by default
+all: $(TARGETS)
 
-# Directories
-SRC_DIR := src
-OBJ_DIR := obj
-BIN_DIR := bin
+# Build type: Debug or Release
+BUILD_TYPE = Debug
 
-# Target
-TARGET := $(BIN_DIR)/chromacards.gbc
+# Number of ROM banks (A = Automatic)
+N_BANKS = A
 
-# Source and object files
-SRCS := $(wildcard $(SRC_DIR)/*.c)
-OBJECTS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+# Default hardware sprite size (8x8 for this tile-based UI game)
+DEFAULT_SPRITES_SIZE = SPRITES_8x8
 
-# Build target
-all: $(TARGET)
+# Source and include directories (relative to this Makefile)
+SRCDIRS = src
+INCDIRS = include
 
-$(TARGET): $(OBJECTS) | $(BIN_DIR)
-	$(CC) $(LDFLAGS) -o $@ $(OBJECTS)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
-
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
-
-clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR) *.map *.sym *.lst
-
-# Run ROM in Emulicious
-run: $(TARGET)
-ifeq ($(OS),Windows_NT)
-	# Use PowerShell Start-Process to reliably launch GUI apps from Make
-	powershell -NoProfile -Command Start-Process -FilePath "$(EMULICIOUS)" -ArgumentList "$(TARGET)"
-else
-	$(EMULICIOUS) "$(TARGET)" &
-endif
-
-.PHONY: all clean run
+# Include the CrossZGB common Makefile
+include $(ZGB_PATH)/src/MakefileCommon

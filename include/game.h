@@ -6,16 +6,12 @@
 
 #define SCORE_BLIND_BONUS 5
 
+// Global game state shared across all CrossZGB states
+extern Game game;
+extern uint8_t deck_pos;
+extern ShopItem shop_items[SHOP_ITEMS];
+
 // Game initialization
 void init_game(Game* game);
-
-// Main game loop
-void run_game(void);
-
-// State handlers
-void handle_blind_select(Game* game);
-void handle_play_hand(Game* game);
-void handle_scoring(Game* game);
-void handle_shop(Game* game, ShopItem* items);
 
 #endif // GAME_H

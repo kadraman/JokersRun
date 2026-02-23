@@ -2,7 +2,21 @@
 
 ## Getting Started in 5 Minutes
 
-### 1. Build the Game
+### 1. Install CrossZGB
+
+Download the latest [CrossZGB release](https://github.com/gbdk-2020/CrossZGB/releases/latest) and set the `ZGB_PATH` environment variable to the `common` directory:
+
+```bash
+# Linux / macOS
+export ZGB_PATH=/path/to/CrossZGB/common
+
+# Windows
+set ZGB_PATH=C:\path\to\CrossZGB\common
+```
+
+> See the [CrossZGB README](https://github.com/gbdk-2020/CrossZGB/) for full installation instructions.
+
+### 2. Build the Game
 
 ```bash
 # Option A: Use the build script
@@ -13,9 +27,9 @@ make clean
 make
 ```
 
-**Output**: `chromacards.gbc` (32KB Game Boy Color ROM)
+**Output**: `build/gbc/JokersRun.gbc`
 
-### 2. Run the Game
+### 3. Run the Game
 
 #### On an Emulator (Recommended)
 Download a Game Boy Color emulator:
@@ -23,24 +37,25 @@ Download a Game Boy Color emulator:
 - **SameBoy** (Windows/Mac/Linux): https://sameboy.github.io/
 - **mGBA** (All platforms): https://mgba.io/
 
-Then: **File → Open ROM → Select chromacards.gbc**
+Then: **File → Open ROM → Select JokersRun.gbc**
 
 #### On Real Hardware
-- Copy `chromacards.gbc` to a flashcart (e.g., EverDrive-GB)
+- Copy `JokersRun.gbc` to a flashcart (e.g., EverDrive-GB)
 - Insert into Game Boy Color
 - Power on and play!
 
-### 3. Learn to Play
+### 4. Learn to Play
 
 #### First Blind (Tutorial)
 1. **Title Screen**: Press START
-2. **Blind 1**: Target is 300 points. Press START to begin.
+2. **Blind 1**: Target is 100 points. Press START to begin.
 3. **Card Selection**: 
    - Use LEFT/RIGHT to select cards
-   - Press A to select all 5 cards
-   - Press B to play your hand
+   - Press UP to select a card, DOWN to deselect
+   - Press A to play your hand
+   - Press B to discard selected cards
 4. **Scoring**: See your poker hand and earned points
-5. **Repeat**: Play up to 4 hands to reach 300 points
+5. **Repeat**: Play up to 4 hands to reach the target
 6. **Shop**: Spend money to buy jokers!
 
 #### Core Strategy
@@ -48,7 +63,7 @@ Then: **File → Open ROM → Select chromacards.gbc**
 - **Round 3+**: Build joker combos, aim for big multipliers
 - **Winning**: Each blind gets harder - collect jokers to keep up!
 
-### 4. Understanding Scoring
+### 5. Understanding Scoring
 
 **Score = Chips × Multiplier**
 
@@ -62,7 +77,7 @@ With jokers:
 - **Pair + Mult+4 Joker**: 10 chips × 6 mult = **60 points**
 - **Flush + Chips+50 + Mult+4**: 85 chips × 8 mult = **680 points**
 
-### 5. Joker Quick Reference
+### 6. Joker Quick Reference
 
 | Joker | Effect | Best For |
 |-------|--------|----------|
@@ -72,27 +87,24 @@ With jokers:
 | **Lucky** | +1-3 mult random | Any strategy |
 | **Face Bonus** | +10 chips per face card | Pair/high card |
 
-### 6. Control Cheat Sheet
+### 7. Control Cheat Sheet
 
 | Screen | Controls |
 |--------|----------|
-| **Card Selection** | LEFT/RIGHT: navigate, A: select, B: play |
+| **Card Selection** | LEFT/RIGHT: navigate, UP: select, DOWN: deselect, A: play, B: discard |
 | **Shop** | UP/DOWN: navigate, A: buy, B: exit |
 | **Other Screens** | A or START: continue |
 
 ## Common Questions
 
 ### Q: How do I select cards to play?
-**A**: Press A on each of the 5 cards to select them all, then press B to evaluate.
+**A**: Navigate with LEFT/RIGHT, press UP to select a card. When ready, press A to play.
 
 ### Q: What should I buy first?
 **A**: "Mult +4" is the most consistent early joker. Buy 2-3 of them!
 
 ### Q: How do I get more money?
-**A**: Score more points! You get (score ÷ 10) money per hand.
-
-### Q: Can I discard cards?
-**A**: Not yet - discarding isn't implemented. You must play all 5 cards.
+**A**: Defeating each blind earns you money plus bonus for hands remaining.
 
 ### Q: What's the highest score possible?
 **A**: With 5 Mult+4 jokers: Royal Flush = 100 × (8 + (5 × 4)) = **2,800 points**!
@@ -119,21 +131,27 @@ With jokers:
 ## Building from Source
 
 ### Prerequisites
-- GBDK-2020 (included in `gbdk/` directory)
+- [CrossZGB](https://github.com/gbdk-2020/CrossZGB/releases/latest) installed with `ZGB_PATH` set
 - Make
 - Bash (for build.sh script)
 
 ### Build Commands
 ```bash
 make clean    # Remove build artifacts
-make          # Compile the game
+make          # Compile the game (output: build/gbc/JokersRun.gbc)
 ./build.sh    # Automated build with verification
 ```
 
-### Modifying the Game
+### Project Structure
 All source code is in `src/` and headers in `include/`:
-- `main.c` - Entry point
-- `game.c` - Main game loop
+- `ZGBMain.c` - CrossZGB entry point (initial state)
+- `StateTitleScreen.c` - Title screen state
+- `StateBlindSelect.c` - Blind selection state
+- `StatePlayHand.c` - Card selection / hand playing state
+- `StateScoring.c` - Hand evaluation and score display state
+- `StateShop.c` - Shop state
+- `StateGameOver.c` - Game over state
+- `game.c` - Global game data and initialization
 - `poker.c` - Hand evaluation
 - `jokers.c` - Joker effects
 - `shop.c` - Shop system
@@ -147,6 +165,7 @@ After editing, run `make` to rebuild.
 - **README.md**: Full project documentation
 - **FEATURES.md**: Complete feature list and strategies
 - **IMPLEMENTATION.md**: Technical implementation details
+- **CrossZGB Wiki**: https://github.com/gbdk-2020/CrossZGB/wiki
 - **GitHub Issues**: Report bugs or request features
 
 ## Have Fun!
@@ -154,3 +173,4 @@ After editing, run `make` to rebuild.
 Enjoy playing **Chroma Cards: Joker's Run** - the poker roguelike for Game Boy Color!
 
 Good luck reaching the highest blind!
+

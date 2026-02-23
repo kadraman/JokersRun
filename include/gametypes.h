@@ -66,24 +66,15 @@ typedef struct {
     uint8_t active;
 } Joker;
 
-// Game state
-typedef enum {
-    STATE_BLIND_SELECT = 0,
-    STATE_PLAY_HAND,
-    STATE_SCORING,
-    STATE_SHOP,
-    STATE_GAME_OVER
-} GameState;
-
+// Game data (game state transitions are handled by CrossZGB states)
 typedef struct {
-    GameState state;
     uint8_t blind_level;
     uint16_t target_score;
     uint16_t current_score;
     uint8_t hands_left;
-    uint8_t extra_hands; // Track extra hands from shop purchases
+    uint8_t extra_hands;    // Extra hands from shop purchases
     uint8_t discards_left;
-    uint8_t extra_discards; // Track extra discards from shop purchases
+    uint8_t extra_discards; // Extra discards from shop purchases
     uint16_t money;
     Joker jokers[MAX_JOKERS];
     Card deck[DECK_SIZE];
@@ -91,3 +82,4 @@ typedef struct {
 } Game;
 
 #endif // GAMETYPES_H
+
